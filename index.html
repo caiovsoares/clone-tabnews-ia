@@ -127,6 +127,11 @@
       font-size: 1.15rem;
       font-weight: 650;
     }
+
+    #notice {
+      margin: .4rem 0 0;
+      color: #ffcb70;
+    }
   </style>
 </head>
 <body>
@@ -145,19 +150,23 @@
     </button>
     <button class="spin-button" type="button">Girar roleta</button>
     <p id="result" role="status"></p>
+    <p id="notice" role="status"></p>
   </main>
   <script>
     const wheel = document.querySelector(".wheel");
     const controls = document.querySelectorAll("button");
     const result = document.querySelector("#result");
+    const notice = document.querySelector("#notice");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let spinning = false;
+    let completedSpins = 0;
 
     async function spin() {
       if (spinning) return;
       spinning = true;
       controls.forEach(button => button.setAttribute("aria-disabled", "true"));
       result.textContent = "Girando…";
+      notice.textContent = "";
 
       // Cinema fica no topo, então cinco voltas completas o alinham ao ponteiro.
       await wheel.animate(
@@ -166,6 +175,10 @@
       ).finished;
 
       result.textContent = "Você ganhou: Cinema!";
+      completedSpins++;
+      if (completedSpins % 3 === 0) {
+        notice.textContent = "Você não vai ganhar a motinha elétrica kkk";
+      }
       spinning = false;
       controls.forEach(button => button.removeAttribute("aria-disabled"));
     }
